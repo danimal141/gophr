@@ -11,5 +11,5 @@ func main() {
 		"/assets/",
 		http.StripPrefix("/assets/", http.FileServer(http.Dir("assets/"))),
 	)
-	http.ListenAndServe(":3000", mux)
+	http.ListenAndServe("localhost:3000", mux)
 }
