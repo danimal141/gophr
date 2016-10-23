@@ -37,5 +37,5 @@ func (w *MiddlewareResponseWriter) Write(bytes []byte) (int, error) {
 
 func (w *MiddlewareResponseWriter) WriteHeader(code int) {
 	w.written = true
-	return w.ResponseWriter.WriteHeader(code)
+	w.ResponseWriter.WriteHeader(code)
 }
