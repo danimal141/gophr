@@ -25,9 +25,7 @@ type MiddlewareResponseWriter struct {
 }
 
 func NewMiddlewareResponseWriter(w http.ResponseWriter) *MiddlewareResponseWriter {
-	return &MiddlewareResponseWriter{
-		ResponseWriter: w,
-	}
+	return &MiddlewareResponseWriter{ResponseWriter: w}
 }
 
 func (w *MiddlewareResponseWriter) Write(bytes []byte) (int, error) {
