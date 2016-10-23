@@ -9,7 +9,14 @@ func (m *Middleware) Add(h http.Handler) {
 }
 
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// TODO: Implement
+	mw := NewMiddlewareResponseWriter(w)
+	for _, handler := range m {
+		handler.ServeHTTP(mw, r)
+		if mw.written {
+			return
+		}
+	}
+	http.NotFound(w, r)
 }
 
 type MiddlewareResponseWriter struct {
