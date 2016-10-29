@@ -22,7 +22,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, name string, data in
 	funcs := template.FuncMap{
 		"yield": func() (template.HTML, error) {
 			buf := bytes.NewBuffer(nil)
-			err := templates.ExecuteTemplate(buf, name, data) // Write to buffer instead of ResponseWriter
+			err := templates.ExecuteTemplate(buf, name, data)
 			return template.HTML(buf.String()), err
 		},
 	}
