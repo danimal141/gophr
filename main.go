@@ -15,6 +15,7 @@ func NewRouter() *httprouter.Router {
 func main() {
 	router := NewRouter()
 	router.GET("/", HandleHome)
+	router.GET("/register", HandleUserNew)
 	router.ServeFiles(
 		"/assets/*filepath",
 		http.Dir("assets/"),
