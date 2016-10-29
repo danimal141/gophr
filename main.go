@@ -16,6 +16,7 @@ func main() {
 	router := NewRouter()
 	router.GET("/", HandleHome)
 	router.GET("/register", HandleUserNew)
+	router.POST("/register", HandleUserCreate)
 	router.ServeFiles(
 		"/assets/*filepath",
 		http.Dir("assets/"),

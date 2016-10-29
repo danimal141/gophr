@@ -31,7 +31,10 @@ func NewUser(username, email, password string) (User, error) {
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return user, err
+	}
 	user.HashedPassword = string(hashedPassword)
-	user.ID = GenerateID("usr", userIDLength)
+	user.ID, err = GenerateID("usr", userIDLength)
 	return user, err
 }
