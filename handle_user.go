@@ -24,6 +24,11 @@ func HandleUserCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		panic(err)
 		return
 	}
-	// TODO: store user
+
+	err = globalUserStore.Save(user)
+	if err != nil {
+		panic(err)
+		return
+	}
 	http.Redirect(w, r, "/?flash=User+created", http.StatusFound)
 }

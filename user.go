@@ -30,6 +30,22 @@ func NewUser(username, email, password string) (User, error) {
 		return user, errPasswordTooShort
 	}
 
+	existingUser, err := globalUserStore.FindByUsername(username)
+	if err != nil {
+		return user, err
+	}
+	if existingUser != nil {
+		return user, errUsernameExists
+	}
+
+	existingUser, err = globalUserStore.FindByEmail(email)
+	if err != nil {
+		return user, err
+	}
+	if existingUser != nil {
+		return user, errEmailExists
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return user, err
