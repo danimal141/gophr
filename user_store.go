@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -16,6 +18,34 @@ type UserStore interface {
 type FileUserStore struct {
 	filename string
 	Users    map[string]User
+}
+
+var globalUserStore UserStore
+
+func init() {
+	store, err := NewFileUserStore("./data/users.json")
+	if err != nil {
+		panic(fmt.Errorf("Error creating user store: %s", err))
+	}
+	globalUserStore = store
+}
+
+func NewFileUserStore(filename string) (*FileUserStore, error) {
+	store := &FileUserStore{filename: filename, Users: map[string]User{}}
+
+	contents, err := ioutil.ReadFile(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return store, err
+		}
+		return nil, err
+	}
+
+	err = json.Unmarshal(contents, store)
+	if err != nil {
+		return nil, err
+	}
+	return store, nil
 }
 
 func (store FileUserStore) Find(id string) (*User, error) {
