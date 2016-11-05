@@ -12,7 +12,7 @@ type UserStore interface {
 	Find(string) (*User, error)
 	FindByEmail(string) (*User, error)
 	FindByUsername(string) (*User, error)
-	Save(User) error
+	Save(*User) error
 }
 
 type FileUserStore struct {
@@ -48,7 +48,7 @@ func NewFileUserStore(filename string) (*FileUserStore, error) {
 	return store, nil
 }
 
-func (store FileUserStore) Find(id string) (*User, error) {
+func (store *FileUserStore) Find(id string) (*User, error) {
 	user, ok := store.Users[id]
 	if ok {
 		return &user, nil
@@ -56,7 +56,7 @@ func (store FileUserStore) Find(id string) (*User, error) {
 	return nil, nil
 }
 
-func (store FileUserStore) FindByEmail(email string) (*User, error) {
+func (store *FileUserStore) FindByEmail(email string) (*User, error) {
 	if email == "" {
 		return nil, nil
 	}
@@ -68,7 +68,7 @@ func (store FileUserStore) FindByEmail(email string) (*User, error) {
 	return nil, nil
 }
 
-func (store FileUserStore) FindByUsername(username string) (*User, error) {
+func (store *FileUserStore) FindByUsername(username string) (*User, error) {
 	if username == "" {
 		return nil, nil
 	}
@@ -80,13 +80,12 @@ func (store FileUserStore) FindByUsername(username string) (*User, error) {
 	return nil, nil
 }
 
-func (store FileUserStore) Save(user User) error {
-	store.Users[user.ID] = user
+func (store *FileUserStore) Save(user *User) error {
+	store.Users[user.ID] = *user
 
 	contents, err := json.MarshalIndent(store, "", "  ")
 	if err != nil {
 		return err
 	}
-
 	return ioutil.WriteFile(store.filename, contents, 0660)
 }

@@ -14,8 +14,8 @@ const (
 	userIDLength      = 16
 )
 
-func NewUser(username, email, password string) (User, error) {
-	user := User{Username: username, Email: email}
+func NewUser(username, email, password string) (*User, error) {
+	user := &User{Username: username, Email: email}
 
 	if username == "" {
 		return user, errNoUsername
