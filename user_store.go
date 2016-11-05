@@ -88,9 +88,5 @@ func (store FileUserStore) Save(user User) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(store.filename, contents, 0660)
-	if err != nil {
-		return err
-	}
-	return nil
+	return ioutil.WriteFile(store.filename, contents, 0660)
 }
