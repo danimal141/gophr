@@ -6,8 +6,9 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// TODO: Implement
 func HandleSessionNew(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	next := r.URL.Query().Get("next")
+	RenderTemplate(w, r, "sessions/new", map[string]interface{}{"Next": next})
 }
 
 // TODO: Implement
