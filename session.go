@@ -18,10 +18,10 @@ const (
 	sessionIDLength   = 20
 )
 
-func NewSession(w http.ResponseWriter) (*Session, error) {
+func NewSession(w http.ResponseWriter) *Session {
 	id, err := GenerateID("sess", sessionIDLength)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	expiry := time.Now().Add(sessionLifeTime)
@@ -35,7 +35,7 @@ func NewSession(w http.ResponseWriter) (*Session, error) {
 		Expires: expiry,
 	}
 	http.SetCookie(w, cookie)
-	return session, nil
+	return session
 }
 
 func RequestSession(r *http.Request) *Session {
@@ -82,4 +82,12 @@ func RequireLogin(w http.ResponseWriter, r *http.Request) {
 
 func (session *Session) Expired() bool {
 	return session.Expiry.Before(time.Now())
+}
+
+func FindOrCreateSession(w http.ResponseWriter, r *http.Request) *Session {
+	session := RequestSession(r)
+	if session == nil {
+		session = NewSession(w)
+	}
+	return session
 }

@@ -29,10 +29,7 @@ func HandleUserCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		panic(err)
 	}
 
-	session, err := NewSession(w)
-	if err != nil {
-		panic(err)
-	}
+	session := NewSession(w)
 	session.UserID = user.ID
 	err = globalSessionStore.Save(session)
 	if err != nil {
