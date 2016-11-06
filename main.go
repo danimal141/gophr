@@ -17,13 +17,20 @@ func main() {
 	router.GET("/", HandleHome)
 	router.GET("/register", HandleUserNew)
 	router.POST("/register", HandleUserCreate)
+	router.GET("/login", HandleSessionNew)
+	router.POST("/login", HandleSessionCreate)
 	router.ServeFiles(
 		"/assets/*filepath",
 		http.Dir("assets/"),
 	)
 
+	secureRouter := NewRouter()
+	secureRouter.GET("/logout", HandleSessionDestroy)
+
 	m := Middleware{}
 	m.Add(router)
+	m.Add(http.HandlerFunc(RequireLogin))
+	m.Add(secureRouter)
 
 	http.ListenAndServe("localhost:3000", m)
 }
