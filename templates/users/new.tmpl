@@ -4,7 +4,7 @@
 	{{if .Error }}
 		<p class="text-danger">{{.Error}}</p>
 	{{end}}
-	<form action="/register" method="POST">
+	<form action="/users" method="POST">
 		<div class="form-group">
 			<label for="newUsername">Username</label>
 			<input type="text" name="username" value="{{.User.Username}}" id="newUsername" class="form-control">

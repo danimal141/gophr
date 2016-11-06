@@ -8,18 +8,14 @@ import (
 const idSource = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 const idSourceLen = byte(len(idSource))
 
-func GenerateID(prefix string, length int) (string, error) {
+func GenerateID(prefix string, length int) string {
 	id := make([]byte, length)
-
-	_, err := rand.Read(id)
-	if err != nil {
-		return "", err
-	}
+	rand.Read(id)
 
 	// Replace each random number with an alphanumeric value
 	for i, b := range id {
 		id[i] = idSource[b%idSourceLen]
 	}
 
-	return fmt.Sprintf("%s_%s", prefix, string(id)), nil
+	return fmt.Sprintf("%s_%s", prefix, string(id))
 }

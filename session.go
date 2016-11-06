@@ -19,14 +19,9 @@ const (
 )
 
 func NewSession(w http.ResponseWriter) *Session {
-	id, err := GenerateID("sess", sessionIDLength)
-	if err != nil {
-		panic(err)
-	}
-
 	expiry := time.Now().Add(sessionLifeTime)
 	session := &Session{
-		ID:     id,
+		ID:     GenerateID("sess", sessionIDLength),
 		Expiry: expiry,
 	}
 	cookie := &http.Cookie{

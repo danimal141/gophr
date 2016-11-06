@@ -51,7 +51,7 @@ func NewUser(username, email, password string) (*User, error) {
 		return user, err
 	}
 	user.HashedPassword = string(hashedPassword)
-	user.ID, err = GenerateID("usr", userIDLength)
+	user.ID = GenerateID("usr", userIDLength)
 	return user, err
 }
 

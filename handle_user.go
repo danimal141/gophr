@@ -37,3 +37,12 @@ func HandleUserCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	}
 	http.Redirect(w, r, "/?flash=User+created", http.StatusFound)
 }
+
+func HandleUserEdit(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	u := RequestUser(r)
+	RenderTemplate(w, r, "users/edit", map[string]interface{}{"User": u})
+}
+
+// TODO: Implement
+func HandleUserUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+}

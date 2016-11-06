@@ -15,8 +15,8 @@ func NewRouter() *httprouter.Router {
 func main() {
 	router := NewRouter()
 	router.GET("/", HandleHome)
-	router.GET("/register", HandleUserNew)
-	router.POST("/register", HandleUserCreate)
+	router.GET("/users/new", HandleUserNew)
+	router.POST("/users", HandleUserCreate)
 	router.GET("/login", HandleSessionNew)
 	router.POST("/login", HandleSessionCreate)
 	router.ServeFiles(
@@ -25,6 +25,8 @@ func main() {
 	)
 
 	secureRouter := NewRouter()
+	secureRouter.GET("/users/edit", HandleUserEdit)
+	secureRouter.PATCH("/users", HandleUserUpdate)
 	secureRouter.GET("/logout", HandleSessionDestroy)
 
 	m := Middleware{}
