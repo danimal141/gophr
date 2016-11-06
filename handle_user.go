@@ -18,7 +18,10 @@ func HandleUserCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	)
 	if err != nil {
 		if IsValidationError(err) {
-			RenderTemplate(w, r, "users/new", map[string]interface{}{"Error": err.Error(), "User": user})
+			RenderTemplate(w, r, "users/new", map[string]interface{}{
+				"Error": err.Error(),
+				"User":  user,
+			})
 			return
 		}
 		panic(err)
@@ -43,6 +46,34 @@ func HandleUserEdit(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	RenderTemplate(w, r, "users/edit", map[string]interface{}{"User": u})
 }
 
-// TODO: Implement
 func HandleUserUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	currentUser := RequestUser(r)
+	email := r.FormValue("email")
+	currentPassword := r.FormValue("currentPassword")
+	newPassword := r.FormValue("newPassword")
+
+	user, err := UpdateUser(currentUser, email, currentPassword, newPassword)
+	if err != nil {
+		if IsValidationError(err) {
+			RenderTemplate(w, r, "users/edit", map[string]interface{}{
+				"Error": err.Error(),
+				"User":  user,
+			})
+			return
+		}
+		panic(err)
+	}
+	err = globalUserStore.Save(currentUser)
+	if err != nil {
+		panic(err)
+	}
+
+	session := NewSession(w)
+	session.UserID = user.ID
+	err = globalSessionStore.Save(session)
+	if err != nil {
+		panic(err)
+	}
+
+	http.Redirect(w, r, "/account?flash=User+updated", http.StatusFound)
 }

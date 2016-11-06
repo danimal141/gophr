@@ -21,7 +21,7 @@ func HandleSessionCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 		if IsValidationError(err) {
 			RenderTemplate(w, r, "sessions/new", map[string]interface{}{
 				"User":  user,
-				"Error": err,
+				"Error": err.Error(),
 				"Next":  next,
 			})
 			return

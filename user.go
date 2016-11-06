@@ -72,3 +72,41 @@ func FindUser(username, password string) (*User, error) {
 	}
 	return existingUser, nil
 }
+
+func UpdateUser(user *User, email, currentPassword, newPassword string) (User, error) {
+	u := *user // copy user
+	u.Email = email
+
+	existingUser, err := globalUserStore.FindByEmail(email)
+	if err != nil {
+		return u, err
+	}
+	if existingUser != nil && existingUser.ID != user.ID {
+		return u, errEmailExists
+	}
+
+	user.Email = email
+
+	if currentPassword == "" {
+		return u, nil
+	}
+
+	if err = bcrypt.CompareHashAndPassword(
+		[]byte(u.HashedPassword),
+		[]byte(currentPassword),
+	); err != nil {
+		return u, errPasswordIncorrect
+	}
+
+	if newPassword == "" {
+		return u, errNoPassword
+	}
+
+	if len(newPassword) < passwordMinLength {
+		return u, errPasswordTooShort
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	user.HashedPassword = string(hashedPassword)
+	return u, err
+}

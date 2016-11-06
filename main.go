@@ -14,19 +14,20 @@ func NewRouter() *httprouter.Router {
 
 func main() {
 	router := NewRouter()
-	router.GET("/", HandleHome)
-	router.GET("/users/new", HandleUserNew)
-	router.POST("/users", HandleUserCreate)
-	router.GET("/login", HandleSessionNew)
-	router.POST("/login", HandleSessionCreate)
 	router.ServeFiles(
 		"/assets/*filepath",
 		http.Dir("assets/"),
 	)
 
+	router.GET("/", HandleHome)
+	router.GET("/register", HandleUserNew)
+	router.POST("/register", HandleUserCreate)
+	router.GET("/login", HandleSessionNew)
+	router.POST("/login", HandleSessionCreate)
+
 	secureRouter := NewRouter()
-	secureRouter.GET("/users/edit", HandleUserEdit)
-	secureRouter.PATCH("/users", HandleUserUpdate)
+	secureRouter.GET("/account", HandleUserEdit)
+	secureRouter.POST("/account", HandleUserUpdate)
 	secureRouter.GET("/logout", HandleSessionDestroy)
 
 	m := Middleware{}
