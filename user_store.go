@@ -9,10 +9,10 @@ import (
 )
 
 type UserStore interface {
-	Find(string) (*User, error)
-	FindByEmail(string) (*User, error)
-	FindByUsername(string) (*User, error)
-	Save(*User) error
+	Find(id string) (*User, error)
+	FindByEmail(email string) (*User, error)
+	FindByUsername(username string) (*User, error)
+	Save(user *User) error
 }
 
 type FileUserStore struct {

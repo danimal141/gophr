@@ -8,9 +8,9 @@ import (
 )
 
 type SessionStore interface {
-	Find(string) (*Session, error)
-	Save(*Session) error
-	Delete(*Session) error
+	Find(id string) (*Session, error)
+	Save(session *Session) error
+	Delete(session *Session) error
 }
 
 type FileSessionStore struct {
