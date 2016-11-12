@@ -1,0 +1,1 @@
+export MYSQL_DATA_SOURCE_NAME="{username}:{password}@tcp({address}:{port})/{database_name}"
