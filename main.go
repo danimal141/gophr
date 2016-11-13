@@ -57,6 +57,7 @@ func main() {
 	router.GET("/login", HandleSessionNew)
 	router.POST("/login", HandleSessionCreate)
 	router.GET("/image/:imageID", HandleImageShow)
+	router.GET("/user/:userID", HandleUserShow)
 
 	secureRouter := NewRouter()
 	secureRouter.GET("/account", HandleUserEdit)
