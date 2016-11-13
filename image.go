@@ -89,3 +89,11 @@ func (img *Image) CreateFromFile(file multipart.File, headers *multipart.FileHea
 	img.Size = size
 	return globalImageStore.Save(img)
 }
+
+func (img *Image) ShowRoute() string {
+	return "/image/" + img.ID
+}
+
+func (img *Image) StaticRoute() string {
+	return "/im/" + img.Location
+}

@@ -46,6 +46,10 @@ func main() {
 		"/assets/*filepath",
 		http.Dir("assets/"),
 	)
+	router.ServeFiles(
+		"/im/*filepath",
+		http.Dir("data/images/"),
+	)
 
 	router.GET("/", HandleHome)
 	router.GET("/register", HandleUserNew)

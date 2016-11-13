@@ -49,16 +49,17 @@ func (store *DBImageStore) Find(id string) (*Image, error) {
 		`,
 		id,
 	)
-	img := &Image{}
+	img := Image{}
 	err := row.Scan(
-		img.ID,
-		img.UserID,
-		img.Name,
-		img.Description,
-		img.Size,
-		img.CreatedAt,
+		&img.ID,
+		&img.UserID,
+		&img.Name,
+		&img.Location,
+		&img.Description,
+		&img.Size,
+		&img.CreatedAt,
 	)
-	return img, err
+	return &img, err
 }
 
 func (store *DBImageStore) FindAll(offset int) ([]Image, error) {
@@ -92,26 +93,27 @@ func (store *DBImageStore) FindAllByUser(user *User, offset int) ([]Image, error
 }
 
 func (store *DBImageStore) findAllQuery(query string, args ...interface{}) ([]Image, error) {
-	rows, err := store.db.Query(query, args)
+	rows, err := store.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
 
 	imgs := []Image{}
 	for rows.Next() {
-		img := &Image{}
+		img := Image{}
 		err := rows.Scan(
-			img.ID,
-			img.UserID,
-			img.Name,
-			img.Description,
-			img.Size,
-			img.CreatedAt,
+			&img.ID,
+			&img.UserID,
+			&img.Name,
+			&img.Location,
+			&img.Description,
+			&img.Size,
+			&img.CreatedAt,
 		)
 		if err != nil {
 			return nil, err
 		}
-		imgs = append(imgs, *img)
+		imgs = append(imgs, img)
 	}
 	return imgs, nil
 }
