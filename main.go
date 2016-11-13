@@ -57,6 +57,8 @@ func main() {
 	secureRouter.GET("/account", HandleUserEdit)
 	secureRouter.POST("/account", HandleUserUpdate)
 	secureRouter.GET("/logout", HandleSessionDestroy)
+	secureRouter.GET("/images/new", HandleImageNew)
+	secureRouter.POST("/images/new", HandleImageCreate)
 
 	m := Middleware{}
 	m.Add(router)
