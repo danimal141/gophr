@@ -32,6 +32,7 @@ func (store *DBImageStore) Save(img *Image) error {
 		img.ID,
 		img.UserID,
 		img.Name,
+		img.Location,
 		img.Description,
 		img.Size,
 		img.CreatedAt,
