@@ -1,13 +1,17 @@
 package main
 
 import (
+	"image"
 	"io"
 	"mime"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
+
+	"github.com/disintegration/imaging"
 )
 
 const imageIDLength = 10
@@ -27,6 +31,18 @@ type Image struct {
 	Size        int64
 	CreatedAt   time.Time
 	Description string
+}
+
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
+
+func (img *Image) ShowRoute() string {
+	return "/image/" + img.ID
+}
+
+func (img *Image) StaticRoute() string {
+	return "/im/" + img.Location
 }
 
 func NewImage(user *User) *Image {
@@ -70,6 +86,11 @@ func (img *Image) CreateFromURL(imgURL string) error {
 		return err
 	}
 	img.Size = size
+
+	err = img.CreateResizedImages()
+	if err != nil {
+		return err
+	}
 	return globalImageStore.Save(img)
 }
 
@@ -87,13 +108,49 @@ func (img *Image) CreateFromFile(file multipart.File, headers *multipart.FileHea
 		return err
 	}
 	img.Size = size
+
+	err = img.CreateResizedImages()
+	if err != nil {
+		return err
+	}
 	return globalImageStore.Save(img)
 }
 
-func (img *Image) ShowRoute() string {
-	return "/image/" + img.ID
+func (img *Image) CreateResizedImages() error {
+	srcImg, err := imaging.Open("./data/images/" + img.Location)
+	if err != nil {
+		return err
+	}
+
+	errChan := make(chan error)
+	go img.resizePreview(errChan, srcImg)
+	go img.resizeThumbnail(errChan, srcImg)
+
+	// Wait for images to finish resizing
+	for i := 0; i < 2; i++ {
+		err := <-errChan
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func (img *Image) StaticRoute() string {
-	return "/im/" + img.Location
+var widthPreview = 800
+var widthThumbnail = 400
+
+func (img *Image) resizePreview(errChan chan error, srcImg image.Image) {
+	size := srcImg.Bounds().Size()
+	ratio := float64(size.Y) / float64(size.X)
+	height := int(float64(widthPreview) * ratio)
+
+	dstImg := imaging.Resize(srcImg, widthPreview, height, imaging.Lanczos)
+	dest := "./data/images/preview/" + img.Location
+	errChan <- imaging.Save(dstImg, dest)
+}
+
+func (img *Image) resizeThumbnail(errChan chan error, srcImg image.Image) {
+	dstImg := imaging.Thumbnail(srcImg, widthThumbnail, widthThumbnail, imaging.Lanczos)
+	dest := "./data/images/thumbnail/" + img.Location
+	errChan <- imaging.Save(dstImg, dest)
 }
