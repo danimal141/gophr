@@ -45,6 +45,14 @@ func (img *Image) StaticRoute() string {
 	return "/im/" + img.Location
 }
 
+func (img *Image) StaticThumbnailRoute() string {
+	return "/im/thumbnail/" + img.Location
+}
+
+func (img *Image) StaticPreviewRoute() string {
+	return "/im/preview/" + img.Location
+}
+
 func NewImage(user *User) *Image {
 	return &Image{
 		ID:        GenerateID("img", imageIDLength),
