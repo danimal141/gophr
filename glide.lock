@@ -1,0 +1,21 @@
+hash: d1453abd331eab9380c64033601b456b466f20bc88a5a4e0df6125449a648832
+updated: 2016-11-15T11:51:58.198009128+09:00
+imports:
+- name: github.com/disintegration/imaging
+  version: 5b7e22645c93e3f3911b36b7d66bf8799f3eddfd
+- name: github.com/go-sql-driver/mysql
+  version: 8f6c67f0228a4a6a962008d6c3d1e694e4532e71
+- name: github.com/julienschmidt/httprouter
+  version: 4563b0ba73e4db6c6423b60a26f3cadd2e9a1ec9
+- name: golang.org/x/crypto
+  version: 9477e0b78b9ac3d0b03822fd95422e2fe07627cd
+  subpackages:
+  - bcrypt
+  - blowfish
+- name: golang.org/x/image
+  version: 507b1a44bd72830c136e6ecf7c05f9089796d572
+  subpackages:
+  - bmp
+  - tiff
+  - tiff/lzw
+devImports: []

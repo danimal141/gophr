@@ -1,0 +1,8 @@
+package: github.com/danimal141/gophr
+import:
+- package: github.com/disintegration/imaging
+- package: github.com/go-sql-driver/mysql
+- package: github.com/julienschmidt/httprouter
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt
