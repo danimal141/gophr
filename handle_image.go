@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -10,7 +11,7 @@ import (
 func HandleImageShow(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	img, err := globalImageStore.Find(params.ByName("imageID"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if img == nil {
 		http.NotFound(w, r)
@@ -19,10 +20,10 @@ func HandleImageShow(w http.ResponseWriter, r *http.Request, params httprouter.P
 
 	user, err := globalUserStore.Find(img.UserID)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if user == nil {
-		panic(fmt.Errorf("Could not find user %s", img.UserID))
+		log.Fatal(fmt.Errorf("Could not find user %s", img.UserID))
 	}
 
 	RenderTemplate(w, r, "images/show", map[string]interface{}{
@@ -58,7 +59,7 @@ func HandleImageCreateFromURL(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		panic(err)
+		log.Fatal(err)
 	}
 	http.Redirect(w, r, "/?flash=Image+Uploaded+Successfully", http.StatusFound)
 }
@@ -77,7 +78,7 @@ func HandleImageCreateFromFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer file.Close()
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -41,7 +42,7 @@ func RequestSession(r *http.Request) *Session {
 
 	session, err := globalSessionStore.Find(cookie.Value)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if session == nil {
 		return nil
@@ -61,7 +62,7 @@ func RequestUser(r *http.Request) *User {
 
 	user, err := globalUserStore.Find(session.UserID)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	return user
 }

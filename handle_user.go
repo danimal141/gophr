@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -9,7 +10,7 @@ import (
 func HandleUserShow(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	user, err := globalUserStore.Find(params.ByName("userID"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if user == nil {
 		http.NotFound(w, r)
@@ -18,7 +19,7 @@ func HandleUserShow(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
 	imgs, err := globalImageStore.FindAllByUser(user, 0)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	RenderTemplate(w, r, "users/show", map[string]interface{}{
@@ -45,19 +46,19 @@ func HandleUserCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 			})
 			return
 		}
-		panic(err)
+		log.Fatal(err)
 	}
 
 	err = globalUserStore.Save(user)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	session := NewSession(w)
 	session.UserID = user.ID
 	err = globalSessionStore.Save(session)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	http.Redirect(w, r, "/?flash=User+created", http.StatusFound)
 }
@@ -82,18 +83,18 @@ func HandleUserUpdate(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 			})
 			return
 		}
-		panic(err)
+		log.Fatal(err)
 	}
 	err = globalUserStore.Save(currentUser)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	session := NewSession(w)
 	session.UserID = user.ID
 	err = globalSessionStore.Save(session)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	http.Redirect(w, r, "/account?flash=User+updated", http.StatusFound)

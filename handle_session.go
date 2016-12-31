@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -26,14 +27,14 @@ func HandleSessionCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Pa
 			})
 			return
 		}
-		panic(err)
+		log.Fatal(err)
 	}
 
 	session := FindOrCreateSession(w, r)
 	session.UserID = user.ID
 	err = globalSessionStore.Save(session)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	if next == "" {
 		next = "/"
@@ -46,7 +47,7 @@ func HandleSessionDestroy(w http.ResponseWriter, r *http.Request, _ httprouter.P
 	if session != nil {
 		err := globalSessionStore.Delete(session)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 	}
 	RenderTemplate(w, r, "sessions/destroy", nil)

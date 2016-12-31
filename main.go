@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -18,21 +19,21 @@ func init() {
 	// Assign a user store
 	userStore, err := NewFileUserStore("./data/users.json")
 	if err != nil {
-		panic(fmt.Errorf("Error creating user store: %s", err))
+		log.Fatal(fmt.Errorf("Error creating user store: %s", err))
 	}
 	globalUserStore = userStore
 
 	// Assign a session store
 	sessionStore, err := NewFileSessionStore("./data/sessions.json")
 	if err != nil {
-		panic(fmt.Errorf("Error creating session store: %s", err))
+		log.Fatal(fmt.Errorf("Error creating session store: %s", err))
 	}
 	globalSessionStore = sessionStore
 
 	// Assign a sql database
 	db, err := NewMySQLDB(os.Getenv("MYSQL_DATA_SOURCE_NAME"))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	globalMySQLDB = db
 
